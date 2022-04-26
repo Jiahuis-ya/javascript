@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>小蛇躲避小游戏</title>
+
+	<style type="text/css">
+		.wrap{
+			position: relative;
+			width: 500px;
+			height: 500px;
+			margin: 50px auto;
+			background-color: #000;
+			overflow: hidden;
+		}
+
+		.round{
+			display: block;
+			position: absolute;
+			width: 20px;
+			height: 20px;
+			border-radius: 50%;
+			background-color: green;
+
+		}
+
+		.round.head{
+			background-color: red;
+		}
+
+		.food{
+			display: block;
+			position: absolute;
+			width: 20px;
+			height: 20px;
+			border-radius: 50%;
+			background-color: yellow;
+		}
+
+
+
+	</style>
+	
+</head>
+<body>
+
+	<div class="wrap"></div>
+
+	<script type="text/javascript" src="js/utils.js"></script>
+	
+	<script type="text/javascript" >
+		
+	window.onload = function(){
+		init();
+	}	
+	
+
+	function init(){
+		initGame();
+	}	
+
+	var initGame = (function(){
+		var wrap = document.getElementsByClassName('wrap')[0],
+			wrapW = getStyles(wrap, 'width'),
+			wrapH = getStyles(wrap, 'height'),
+			t = null;
+
+		var bodyArr = [              //++++++++++++
+			{x: 0, y: 0},
+			{x: 0, y: 20},
+			{x: 0, y: 40},
+			{x: 0, y: 60},
+			{x: 0, y: 80},
+			{x: 0, y: 100}
+		];
+
+		var Snake = function(){
+			// this.bodyArr = [  //----
+			// 	{x: 0, y: 0},
+			// 	{x: 0, y: 20},
+			// 	{x: 0, y: 40},
+			// 	{x: 0, y: 60},
+			// 	{x: 0, y: 80},
+			// 	{x: 0, y: 100}
+			// ];
+
+			this.dir = 'DOWN';
+		}
+
+		Snake.prototype = {
+			init: function(){
+				this.bindEvent();
+				this.createFood();
+				this.initSnake();
+				//console.log(this);
+				this.run();
+			},
+
+			bindEvent: function(){
+				var _self = this;
+				addEvent(document, 'keydown', function(){
+					_self.changeDir();
+				});
+			},
+
+			initSnake: function(){
+				// var arr = this.bodyArr,   //---------
+				var arr = bodyArr,        //++++++
+					len = arr.length,
+					frag = document.createDocumentFragment(),
+					item;
+
+				for(var i = 0; i < len; i++){
+					item = arr[i];
+
+					var round = document.createElement('i');
+					round.className = i === len - 1 ? 'round head' 
+													: 'round';
+					round.style.left = item.x + 'px';
+					round.style.top = item.y + 'px';
+					frag.appendChild(round);
+				}
+				wrap.appendChild(frag);
+			},
+
+			run: function(){
+				var _self = this;
+				t = setInterval(function(){
+					_self.move();
+				}, 100);
+			},
+
+			move: function(){
+				// var arr = this.bodyArr,   //---------
+				var arr = bodyArr,   //++++++++
+					len = arr.length;
+
+				for(var i = 0; i < len; i++){
+					if(i === len - 1){
+						this.setHeadXY(arr);
+					}else{
+						arr[i].x = arr[i + 1].x;
+						arr[i].y = arr[i + 1].y;
+					}
+				}
+
+				this.eatFood(arr);
+				this.removeSnake();
+				this.initSnake();
+				this.headInBody(arr);
+			},
+
+			setHeadXY: function(arr){
+				head = arr[arr.length - 1];
+
+				switch(this.dir){
+					case 'LEFT':
+						if(head.x <= 0){
+							head.x = wrapW - 20;
+						}else{
+							head.x -= 20;
+						}
+						break;
+					case 'RIGHT':
+						if(head.x >= wrapW - 20){
+							head.x = 0;
+						}else{
+							head.x += 20;
+						}
+						break;
+					case 'UP':
+						if(head.y <= 0){
+							head.y = wrapH - 20;
+						}else{
+							head.y -= 20;
+						}
+						break;
+					case 'DOWN':
+						if(head.y >= wrapH - 20){
+							head.y = 0;
+						}else{
+							head.y += 20;
+						}
+						break;
+					default:
+						break;
+				}
+			},
+
+			headInBody: function(arr){
+				var headX = arr[arr.length - 1].x,
+					headY = arr[arr.length - 1].y,
+					item;
+
+				for(var i = 0; i < arr.length -2; i++){
+					item = arr[i];
+
+					if(headX === item.x && headY === item.y){
+						var _self = this;
+						setTimeout(function(){
+							alert('游戏结束');
+							clearInterval(t);
+							_self.removeSnake();
+							_self.removeFood();
+						}, 300);
+					}
+				}
+			},
+
+			removeSnake: function(){
+				var bodys = document.getElementsByClassName('round');
+				while(bodys.length > 0){
+					bodys[0].remove();
+				}
+			},
+
+			changeDir: function(e){
+				var e = e || window.event,
+					code = e.keyCode;
+				
+				this.setDir(code);
+			},
+
+			setDir: function(code){
+				switch(code){
+					case 37:
+						if(this.dir !== 'RIGHT' && this.dir !== 'LEFT'){
+							this.dir = 'LEFT';
+						}
+						break;
+					case 39:
+						if(this.dir !== 'RIGHT' && this.dir !== 'LEFT'){
+							this.dir = 'RIGHT';
+						}
+						break;
+					case 38:
+						if(this.dir !== 'UP' && this.dir !== 'DOWN'){
+							this.dir = 'UP';
+						}
+						break;
+					case 40:
+						if(this.dir !== 'UP' && this.dir !== 'DOWN'){
+							this.dir = 'DOWN';
+						}
+						break;
+					default:
+						break;
+				}
+			},
+
+
+			createFood: function(){
+				var food = document.createElement('i');
+				food.className = 'food';
+				food.style.left = this.setRandomPos(wrapW) * 20 + 'px';
+				food.style.top = this.setRandomPos(wrapH) * 20 + 'px';
+				wrap.appendChild(food);
+			},
+
+			setRandomPos: function(size){
+				return Math.floor(Math.random() * (size / 20));
+			},
+
+			eatFood: function(arr){
+				var food = document.getElementsByClassName('food')[0],
+					foodX = getStyles(food, 'left'),
+					foodY = getStyles(food, 'top'),
+					headX = arr[arr.length - 1].x,
+					headY = arr[arr.length - 1].y,
+					x,
+					y;
+
+				if(headX === foodX && headY === foodY){
+					this.removeFood();
+					this.createFood();
+
+					if(arr[0].x === arr[1].x){
+						x = arr[0].x;
+						if(arr[0].y > arr[1].y){
+							y = arr[0].y + 20;
+						}else if(arr[0].y < arr[1].y){
+							y = arr[0].y - 20;
+						}
+					}else if(arr[0].y === arr[1].y){
+						y = arr[0].y;
+						if(arr[0].x > arr[1].x){
+							x = arr[0].x + 20;
+						}else if(arr[0].x < arr[1].x){
+							x = arr[0].x - 20;
+						}
+					}
+
+					arr.unshift({x,y})
+				}
+			},
+
+			removeFood: function(){
+				var food = document.getElementsByClassName('food')[0];
+				food.remove();
+			}
+		}
+
+		return new Snake().init();	
+	});
+	</script>	
+</body>
+</html>
