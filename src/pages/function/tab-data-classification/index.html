@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>数据归类技术</title>
+	<link rel="stylesheet" href="css/index.css" />
+	<script src="http://cdn.staticfile.org/jquery/1.10.0/jquery.min.js"></script>
+</head>
+<body>
+	
+	<div class="wrap">
+		<div class="filters">
+			<ul class="filter-list J_filterList clearfix">
+				<li class="J_filterItem filter-item cur" data-field="7">
+					<a href="javascript:;" class="filter-lk">美食推荐</a>
+				</li>
+				<li class="J_filterItem filter-item" data-field="1">
+					<a href="javascript:;" class="filter-lk">各地地产</a>
+				</li>
+				<li class="J_filterItem filter-item" data-field="2">
+					<a href="javascript:;" class="filter-lk">休闲零食</a>
+				</li>
+				<li class="J_filterItem filter-item" data-field="3">
+					<a href="javascript:;" class="filter-lk">各类坚果</a>
+				</li>
+				<li class="J_filterItem filter-item" data-field="4">
+					<a href="javascript:;" class="filter-lk">茗茶冲饮</a>
+				</li>
+				<li class="J_filterItem filter-item" data-field="5">
+					<a href="javascript:;" class="filter-lk">生鲜蔬果</a>
+				</li>
+				<li class="J_filterItem filter-item" data-field="6">
+					<a href="javascript:;" class="filter-lk">粮油米面</a>
+				</li>
+			</ul>
+		</div>
+		<div class="courses-container">
+			<ul class="courses-list clearfix">
+				<script type="text/html" id="J_courseItemTpl">
+					<li class="course-item">
+						<div class="course-tip">
+							<div class="content-block">{{agency}}</div>
+							<div class="opacity-block"></div>
+						</div>
+						<a href="{{link}}" class="course-link">
+							<img src="{{img_url}}" alt="" />
+						</a>
+						<h4 class="course-title">
+							<a href="{{link}}">{{course_name}}</a>
+						</h4>
+						<div class="course-info">
+							<span class="info-free">{{cell_name}}</span>
+							<span class="info-users">{{agency}}</span>
+						</div>
+					</li>
+				</script>
+			</ul>
+		</div>
+	
+	</div>
+	
+	<script src="./js/data.js"></script>
+	<script src="./js/index.js"></script>
+</body>
+</html>
