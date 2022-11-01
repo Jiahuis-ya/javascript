@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>imgLoad</title>
+  <link rel="stylesheet" href="./css/index.css">
+</head>
+<body>
+
+  <ul class="container"></ul>
+
+  <ul style="display: none" id="J_data">
+    [
+      {
+        "img": "./imgs/picture.jpg",
+        "name": "1"
+      },
+      {
+        "img": "./imgs/picture.jpg",
+        "name": "2"
+      },
+      {
+        "img": "./imgs/picture.jpg",
+        "name": "3"
+      },
+      {
+        "img": "./imgs/picture.jpg",
+        "name": "4"
+      },
+      {
+        "img": "./imgs/picture.jpg",
+        "name": "5"
+      },
+      {
+        "img": "./imgs/picture.jpg",
+        "name": "6"
+      },
+      {
+        "img": "./imgs/picture.jpg",
+        "name": "7"
+      }
+    ]
+  </ul>
+
+  <script type="text/html" id="template">
+    <li class="item">
+      <img class="list-img" src="./imgs/noData.jpg" data-src="{{ img }}" alt="{{ name }}" />
+      <span></span>
+      <p style="height: 50px;" class="text">点击置顶{{ name }}</p>
+    </li>
+  </script>
+  <script type="text/javascript" src="./js/lazyLoading.js"></script>
+
+  
+</body>
+</html>
