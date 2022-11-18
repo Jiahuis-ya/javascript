@@ -4,43 +4,39 @@ import styles from './index.module.less';
 const cs = classnames.bind(styles)
 import { useImmer } from 'use-immer'
 import CheckBox from '../CheckBox'
+
+import { Observer, useLocalObservable } from 'mobx-react'
+import { store } from '@/store'
+
+
 interface IProps {
 
 }
 
-
 interface SelectProps {
-  value: string
-  onSelect?: (value: string) => void
+  value: IConversionStatus
+  onSelect?: (value: IConversionStatus) => void
+  options: Array<IBase>
 }
-
-const options = ['2','8','10','16'];
-const checkOptions = options.map((item, index) => {
-  return {
-    key: `${index}`,
-    value: item,
-    checked: !true
-  }
-})
 
 const Select = (props: SelectProps) => {
   const {
     value,
+    options=[],
     onSelect = () => {}
   } = props
   
 
- 
   return (
     <select
       value={ value }
       name="gender"
-      onChange={ (e) => onSelect(e?.target?.value) }
+      onChange={ (e) => onSelect(e?.target?.value as IConversionStatus) }
     >
       {
         options.map((item, idx) => {
           return (
-            <option value={item} key={idx}>{item}</option>
+            <option value={item.value} key={idx}>{item.value}</option>
           )
         })
       }
@@ -50,34 +46,44 @@ const Select = (props: SelectProps) => {
 }
 
 const Index: React.FC<IProps> = () => {
-  const[data, setData] = useImmer(checkOptions)
-  const [current, setCurrent] = useState('2')
-  
+  const localStore: IStore = useLocalObservable(() => store)
+  const [current, setCurrent] = useState<IConversionStatus>(localStore.options[0])
 
   return (
-    <section className={ cs('operate') }>
-      <div className={cs('checkWrap')}>
-        {
-          data.map((item, idx) => {
-            return (
-              <CheckBox
-                key={idx}
-                checked={item.value === current}
-                value={item.value}
-                onChange={(value) => setCurrent(value)}
-              />
-            )
-          })
-        }
-      </div>
-      <Select
-        value={current}
-        onSelect={(value) => {
-          console.log(value)
-          setCurrent(value)
-        }}
-      />
-    </section>
+    <Observer>
+      {
+        () => (
+          <section className={ cs('operate') }>
+            <div className={cs('checkWrap')}>
+              {
+                localStore.baseOptions.map((item, idx) => {
+                  return (
+                    <CheckBox
+                      key={idx}
+                      checked={item.value === current}
+                      value={item.value}
+                      onChange={(value) => {
+                        setCurrent(value)
+                        localStore.setSelect(value)
+                      }}
+                    />
+                  )
+                })
+              }
+            </div>
+            <Select
+              value={current}
+              onSelect={(value) => {
+                setCurrent(value)
+                localStore.setSelect(value)
+              }}
+              options={localStore.baseOptions}
+            />
+          </section>
+        )
+      }
+    </Observer>
+    
   )
 }
 

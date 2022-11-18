@@ -5,8 +5,8 @@ const cs = classnames.bind(styles)
 
 interface CheckBoxProps {
   checked: boolean
-  value: string
-  onChange?: (value: string) => void
+  value: IConversionStatus
+  onChange?: (value: IConversionStatus) => void
 }
 const CheckBox = (props: CheckBoxProps) => {
   const {
