@@ -1,0 +1,23 @@
+@import '../../assets/mixin.less';
+
+.tbl {
+  margin-top: 15px;
+
+  th {
+    background: #f3f3f3;
+  }
+
+  td,th {
+    border: 1px solid #e6e6e6;
+    padding: 5px 8px;
+    word-break: normal;
+  }
+
+  tr:hover td {
+    background-color: #e5f4ef;
+  }
+
+  .text{
+    .input_format(calc(100% - 8px));
+  }
+}
